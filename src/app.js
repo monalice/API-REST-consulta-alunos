@@ -1,7 +1,6 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
-const getProducts = require('./controller/getProducts')
 
 app.use(cors());
 var corsOptions = {
@@ -12,6 +11,8 @@ var corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 
-app.get('/', getProducts);
+const getProducts = require('./routers/productsRouter');
+
+app.use('/', getProducts);
 
 module.exports = app;
