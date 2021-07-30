@@ -1,13 +1,22 @@
 const router = require('express').Router();
 const sequelize = require('../database');
 
-router.get('/', async (req, res) => {
-    const {type, value} = req.body;
+router.post('/', async (req, res) => {
+    const {type, value} = req.body.params;
 
-    if(type !== 'all'){
+    if(type == 'all'){
+        try{
+            const students = await sequelize.query(`SELECT * FROM "Students";`);
+
+            res.send(students[1].rows).status(200);
+        }
+        catch(err){
+            throw new Error(err);
+        }
+    } else {
         try {
             const student = await sequelize.query(`
-                SELECT (name, email, cpf) FROM "Students" WHERE ${type} = '${value}';
+                SELECT * FROM "Students" WHERE ${type} = '${value}';
             `);
 
             if(student[1].rowCount == 0){
@@ -16,18 +25,7 @@ router.get('/', async (req, res) => {
             res.send(student[1].rows);
         }
         catch(err) {
-            res.sendStatus(500);
-            throw err;
-        }
-    } else {
-        try{
-            const students = await sequelize.query(`SELECT (name, email, cpf) FROM "Students";`);
-
-            res.send(students[1].rows).status(200);
-        }
-        catch(err){
-            res.sendStatus(500);
-            throw err;
+            throw new Error(err);
         }
         
     }
