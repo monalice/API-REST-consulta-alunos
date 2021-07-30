@@ -11,7 +11,7 @@ var corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 
-const getProducts = require('./routers/productsRouter');
+const getProducts = require('./routers/studentRouter');
 
 app.use('/', getProducts);
 
